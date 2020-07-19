@@ -1,5 +1,6 @@
 import express from 'express';
 import expressip from 'express-ip';
+import path from 'path';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -14,6 +15,8 @@ interface IpInfo {
 
 // retrieve the ip
 app.use(expressip().getIpInfoMiddleware);
+// static assets
+app.use(express.static(path.join(process.cwd(), 'build')));
 
 // routes
 const routes = express.Router();
@@ -35,6 +38,10 @@ app.get('/api/track', (req: any, res) => {
 
   res.sendStatus(200);
 });
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'build', 'index.html'));
+})
 
 app.listen(PORT, () => {
   if (isDev) {
