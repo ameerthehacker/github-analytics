@@ -15,6 +15,17 @@ interface IpInfo {
 // retrieve the ip
 app.use(expressip().getIpInfoMiddleware);
 
+// routes
+const routes = express.Router();
+
+routes.get('/username', (req, res) => {
+  res.json({
+    username: process.env.USERNAME || 'User'
+  });
+});
+
+app.use('/api', routes);
+
 app.get('/api/track', (req: any, res) => {
   const ipInfo :IpInfo = req.ipInfo;
 
