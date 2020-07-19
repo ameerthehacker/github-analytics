@@ -1,0 +1,7 @@
+{
+  "name": "GitHub Analytics",
+  "description": "Know who are visiting your GitHub profile and repository everyday",
+  "repository": "https://github.com/ameerthehacker/github-analytics.git",
+  "logo": "https://github.com/ameerthehacker/github-analytics/images/logo512.png",
+  "keywords": ["github", "analytics"]
+}

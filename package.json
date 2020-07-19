@@ -1,7 +1,7 @@
 {
-  "name": "gh-profile-tracker",
+  "name": "gh-analytics",
   "version": "0.0.1",
-  "description": "Get insights into how many visit your profile and from which country",
+  "description": "Get insights into how many visit your profile, repositories and from which country",
   "scripts": {
     "dev": "concurrently -k npm:dev-client npm:dev-server",
     "dev-client": "react-scripts start",
