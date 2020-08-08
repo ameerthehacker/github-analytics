@@ -1,7 +1,8 @@
 import express from 'express';
 import expressip from 'express-ip';
 import path from 'path';
-import { load } from 'ts-dotenv';
+import { User } from './entities/user';
+import { connectToDatabase } from './db';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -14,44 +15,67 @@ interface IpInfo {
   country: string;
 }
 
-const env = load({
-  USERNAME: { default: 'User', type: String } 
-});
+// setup DB
+connectToDatabase().then((orm) => {
+  // retrieve the ip
+  app.use(expressip().getIpInfoMiddleware);
+  // static assets
+  app.use(express.static(path.join(process.cwd(), 'build')));
 
-// retrieve the ip
-app.use(expressip().getIpInfoMiddleware);
-// static assets
-app.use(express.static(path.join(process.cwd(), 'build')));
+  // routes
+  const routes = express.Router();
 
-// routes
-const routes = express.Router();
+  routes.get('/is-setup-done', async (req, res) => {
+    try {
+      const usersCount = await orm.em.count(User);
 
-routes.get('/username', (req, res) => {
-  res.json({
-    username: env.USERNAME
+      if (usersCount == 0) {
+        res.json({
+          done: false
+        });
+      } else {
+        res.json({
+          done: true
+        });
+      }
+    } catch (err) {
+      console.error(err);
+
+      res.json({
+        error: true
+      });
+    }
   });
-});
 
-app.use('/api', routes);
+  routes.get('/username', (req, res) => {
+    res.json({
+      username: 'Ameer'
+    });
+  });
 
-app.get('/api/track', (req: any, res) => {
-  const ipInfo :IpInfo = req.ipInfo;
+  app.use('/api', routes);
 
-  if(!ipInfo.error) {
-    // store the tracked info
-  }
+  app.get('/api/track', (req: any, res) => {
+    const ipInfo :IpInfo = req.ipInfo;
 
-  res.sendStatus(200);
-});
+    if(!ipInfo.error) {
+      // store the tracked info
+    }
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(process.cwd(), 'build', 'index.html'));
-})
+    res.sendStatus(200);
+  });
 
-app.listen(PORT, () => {
-  if (isDev) {
-    console.log(`🚀 development server started in port ${PORT}`)
-  } else {
-    console.log(`🚀 production server started in port ${PORT}`)
-  }
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(process.cwd(), 'build', 'index.html'));
+  })
+
+  app.listen(PORT, () => {
+    if (isDev) {
+      console.log(`🚀 development server started in port ${PORT}`)
+    } else {
+      console.log(`🚀 production server started in port ${PORT}`)
+    }
+  });
+}).catch(() => {
+  process.exit(1);
 });

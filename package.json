@@ -8,7 +8,12 @@
     "build-client": "react-scripts build",
     "start-server": "ts-node --project src/api/tsconfig.json --files src/api/app.ts",
     "dev-server": "cross-env NODE_ENV=development nodemon --ext ts,js --exec ts-node --project src/api/tsconfig.json --files src/api/app.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migration:create": "ts-node --project src/api/tsconfig.json ./scripts/migrate.ts create",
+    "migration:up": "ts-node --project src/api/tsconfig.json ./scripts/migrate.ts up",
+    "migration:down": "ts-node --project src/api/tsconfig.json ./scripts/migrate.ts down",
+    "migration:list": "ts-node --project src/api/tsconfig.json ./scripts/migrate.ts list",
+    "migration:pending": "ts-node --project src/api/tsconfig.json ./scripts/migrate.ts pending"
   },
   "repository": {
     "type": "git",
@@ -40,7 +45,9 @@
     "emotion-theming": "^10.0.27",
     "express": "^4.17.1",
     "express-ip": "^1.0.4",
+    "mikro-orm": "^3.6.15",
     "nodemon": "^2.0.4",
+    "pg": "^8.3.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-helmet": "^6.1.0",
