@@ -5,6 +5,7 @@ import Home from '../home/home';
 import { ThemeProvider, CSSReset, ColorModeProvider } from '@chakra-ui/core';
 import Navbar from '../../components/navbar/navbar';
 import { SWRConfig } from 'swr';
+import Helmet from 'react-helmet';
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
         fetcher: (...args) => fetch(args).then(res => res.json())
       }}
     >
+      <Helmet titleTemplate="GitHub Analytics | %s" />
       <BrowserRouter>
         <ThemeProvider>
           <ColorModeProvider>
