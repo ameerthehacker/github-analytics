@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Login from '../login/login';
 import Home from '../home/home';
-import { ThemeProvider, CSSReset } from '@chakra-ui/core';
+import { ThemeProvider, CSSReset, ColorModeProvider } from '@chakra-ui/core';
 import Navbar from '../../components/navbar/navbar';
 import { SWRConfig } from 'swr';
 
@@ -16,12 +16,14 @@ export default function App() {
     >
       <BrowserRouter>
         <ThemeProvider>
-          <CSSReset />
-          <Navbar />
-          <Switch>
-            <Route path="/login" component={Login} exact />
-            <Route path="/" component={Home} exact />
-          </Switch>
+          <ColorModeProvider>
+            <CSSReset />
+            <Navbar />
+            <Switch>
+              <Route path="/login" component={Login} exact />
+              <Route path="/" component={Home} exact />
+            </Switch>
+          </ColorModeProvider>
         </ThemeProvider>
       </BrowserRouter>
     </SWRConfig>
