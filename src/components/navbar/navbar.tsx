@@ -1,8 +1,7 @@
 import React from 'react';
-import { Box, Flex, Stack, useColorMode, IconButton, Link as CLink } from '@chakra-ui/core';
+import { Box, Flex, Stack, useColorMode, IconButton } from '@chakra-ui/core';
 import { FaSignOutAlt, FaGithub } from 'react-icons/fa';
 import Brand from './components/brand/brand';
-import { Link } from 'react-router-dom';
 
 export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();
