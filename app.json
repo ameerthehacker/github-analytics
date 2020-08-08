@@ -2,7 +2,7 @@
   "name": "GitHub Analytics",
   "description": "Know who are visiting your GitHub profile and repository everyday",
   "repository": "https://github.com/ameerthehacker/github-analytics.git",
-  "logo": "https://github.com/ameerthehacker/github-analytics/blob/master/images/logo512.png?raw=true",
+  "logo": "https://github.com/ameerthehacker/github-analytics/blob/master/images/logo64.png?raw=true",
   "keywords": ["github", "analytics"],
   "env": {
     "USERNAME": {

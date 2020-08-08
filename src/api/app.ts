@@ -1,6 +1,7 @@
 import express from 'express';
 import expressip from 'express-ip';
 import path from 'path';
+import { load } from 'ts-dotenv';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -13,6 +14,10 @@ interface IpInfo {
   country: string;
 }
 
+const env = load({
+  USERNAME: { default: 'User', type: String } 
+});
+
 // retrieve the ip
 app.use(expressip().getIpInfoMiddleware);
 // static assets
@@ -23,7 +28,7 @@ const routes = express.Router();
 
 routes.get('/username', (req, res) => {
   res.json({
-    username: process.env.USERNAME || 'User'
+    username: env.USERNAME
   });
 });
 
