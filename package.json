@@ -43,6 +43,7 @@
     "@types/react-helmet": "^6.1.0",
     "@types/react-router-dom": "^5.1.5",
     "@types/serve-favicon": "^2.5.0",
+    "@types/uuid": "^8.0.1",
     "concurrently": "^5.2.0",
     "cross-env": "^7.0.2",
     "emotion-theming": "^10.0.27",
@@ -63,7 +64,8 @@
     "swr": "^0.2.3",
     "ts-dotenv": "^0.8.1",
     "ts-node": "^8.10.2",
-    "typescript": "^3.9.7"
+    "typescript": "^3.9.7",
+    "uuid": "^8.3.0"
   },
   "browserslist": {
     "production": [
