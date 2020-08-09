@@ -7,7 +7,7 @@ export default function Setup() {
   return (
     <Flex height="100vh" width="100%" alignItems="center" justifyContent="center">
       <Helmet title="Setup" />
-      <SetupForm />
+      <SetupForm onSubmit={(r) => console.log(r)} />
     </Flex>
   );
 }

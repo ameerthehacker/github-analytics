@@ -1,8 +1,24 @@
 import React from 'react';
-import { Stack, Text, Input, Button, Image } from '@chakra-ui/core';
+import { Stack, Text, Input, Button, Image, FormControl, FormErrorMessage } from '@chakra-ui/core';
 import rocketImg from './rocket.png';
+import { useForm } from 'react-hook-form';
 
-export default function SetupForm() {
+interface SetupFormResult {
+  fullName: string;
+  password: string;
+}
+
+interface SetupFormProps {
+  onSubmit?: (result: SetupFormResult) => void;
+}
+
+interface SetupFormFields extends SetupFormResult {
+  retypePassword: string;
+}
+
+export default function SetupForm({ onSubmit }: SetupFormProps) {
+  const { register, handleSubmit, errors, watch } = useForm<SetupFormFields>();
+
   return (
     <Stack textAlign="center" spacing={5} width={[
       "100%",
@@ -14,10 +30,30 @@ export default function SetupForm() {
         <Image src={rocketImg} alt="rocket image" />
         <Text fontSize="5xl" fontWeight="150">Let us set you up</Text>
       </Stack>
-      <Input borderRadius="25px" size="lg" placeholder="Your full name e.g. Ameer Jhan" />
-      <Input borderRadius="25px" size="lg" placeholder="Password" type="password" />
-      <Input borderRadius="25px" size="lg" placeholder="Retype password" type="password" />
-      <Button borderRadius="25px" size="lg" variantColor="purple">Setup</Button>
+      <form onSubmit={onSubmit && handleSubmit(({ fullName, password }) => onSubmit({
+        fullName,
+        password
+      }))}>
+        <Stack spacing={5}>
+          <FormControl isInvalid={!!errors.fullName}>
+            <Input name="fullName" ref={register({ required: true })} borderRadius="25px" size="lg" placeholder="Your full name e.g. Ameer Jhan" />
+            <FormErrorMessage>Full name is required</FormErrorMessage>
+          </FormControl>
+          <FormControl isInvalid={!!errors.password}>
+            <Input name="password" ref={register({ required: true })} borderRadius="25px" size="lg" placeholder="Password" type="password" />
+            <FormErrorMessage>Password is required</FormErrorMessage>
+          </FormControl>
+          <FormControl isInvalid={!!errors.retypePassword}>
+            <Input name="retypePassword" ref={register({ required: true, validate: (value: string) => {
+              const password = watch('password');
+
+              if (password !== value) return "Mismatch in passwords"
+            }})}  borderRadius="25px" size="lg" placeholder="Retype password" type="password" />
+            <FormErrorMessage>{errors.retypePassword?.message}</FormErrorMessage>
+          </FormControl>
+          <Button type="submit" borderRadius="25px" size="lg" variantColor="purple">Setup</Button>
+        </Stack>
+      </form>
     </Stack>
   )
 }
