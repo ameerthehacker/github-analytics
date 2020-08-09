@@ -5,16 +5,10 @@
   "logo": "https://github.com/ameerthehacker/github-analytics/blob/master/images/logo64.png?raw=true",
   "keywords": ["github", "analytics"],
   "env": {
-    "USERNAME": {
-      "description": "Your username",
-      "value": ""
-    },
-    "PASSWORD": {
-      "description": "Your password",
-      "value": ""
+    "JWT_TOKEN": {
+      "description": "A secret key for jwt generation",
+      "generator": "secret"
     }
   },
-  "scripts": {
-    "postdeploy": "npm run build-client"
-  }
+  "success_url": "/setup"
 }

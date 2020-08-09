@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "concurrently -k npm:dev-client npm:dev-server",
     "dev-client": "react-scripts start",
-    "build-client": "react-scripts build",
+    "build": "react-scripts build",
     "start-server": "ts-node --project src/api/tsconfig.json --files src/api/app.ts",
     "dev-server": "cross-env NODE_ENV=development nodemon --ext ts,js --exec ts-node --project src/api/tsconfig.json --files src/api/app.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
