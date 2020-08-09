@@ -1,12 +1,20 @@
 import React from 'react';
-import { Stack, Text, Image, Input, Button } from '@chakra-ui/core';
+import { Stack, Text, Image, Input, Button, FormControl, FormErrorMessage } from '@chakra-ui/core';
+import { useForm } from 'react-hook-form';
 import helloImg from './hello.png';
 
 interface LoginFormProps {
   username: string;
+  onSubmit?: (result: LoginFormResult) => void;
 }
 
-export default function LoginForm({ username }: LoginFormProps) {
+interface LoginFormResult {
+  password: string;
+}
+
+export default function LoginForm({ username, onSubmit }: LoginFormProps) {
+  const { register, errors, handleSubmit } = useForm<LoginFormResult>();
+
   return (
     <Stack textAlign="center" spacing={5} width={[
       "100%",
@@ -18,8 +26,15 @@ export default function LoginForm({ username }: LoginFormProps) {
         <Image src={helloImg} alt="hello" />
         <Text fontSize="5xl" fontWeight="150">{ username }</Text>
       </Stack>
-      <Input borderRadius="25px" size="lg" placeholder="Password" type="password" />
-      <Button borderRadius="25px" size="lg" variantColor="purple">Login</Button>
+      <form onSubmit={onSubmit && handleSubmit(onSubmit)}>
+        <Stack spacing={5}>
+          <FormControl isInvalid={!!errors.password}>
+            <Input name="password" ref={register({ required: true })} borderRadius="25px" size="lg" placeholder="Password" type="password" />
+            <FormErrorMessage>Password is required</FormErrorMessage>
+          </FormControl>
+          <Button type="submit" borderRadius="25px" size="lg" variantColor="purple">Login</Button>
+        </Stack>
+      </form>
     </Stack>
   )
 }

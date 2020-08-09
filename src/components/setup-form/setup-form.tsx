@@ -28,7 +28,7 @@ export default function SetupForm({ onSubmit }: SetupFormProps) {
     ]} px={5}>
       <Stack direction="row" alignItems="center" justifyContent="center" spacing={3}>
         <Image src={rocketImg} alt="rocket image" />
-        <Text fontSize="5xl" fontWeight="150">Let us set you up</Text>
+        <Text fontSize="4xl" fontWeight="150">Let us set you up</Text>
       </Stack>
       <form onSubmit={onSubmit && handleSubmit(({ fullName, password }) => onSubmit({
         fullName,
@@ -44,7 +44,7 @@ export default function SetupForm({ onSubmit }: SetupFormProps) {
             <FormErrorMessage>Password is required</FormErrorMessage>
           </FormControl>
           <FormControl isInvalid={!!errors.retypePassword}>
-            <Input name="retypePassword" ref={register({ required: true, validate: (value: string) => {
+            <Input name="retypePassword" ref={register({ required: { value: true, message: 'This field is required' }, validate: (value: string) => {
               const password = watch('password');
 
               if (password !== value) return "Mismatch in passwords"
