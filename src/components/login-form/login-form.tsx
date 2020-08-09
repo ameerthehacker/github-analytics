@@ -1,6 +1,6 @@
 import React from 'react';
 import { Stack, Text, Image, Input, Button } from '@chakra-ui/core';
-import hello from './hello.png';
+import helloImg from './hello.png';
 
 interface LoginFormProps {
   username: string;
@@ -15,10 +15,10 @@ export default function LoginForm({ username }: LoginFormProps) {
       "20%"
     ]} px={5}>
       <Stack direction="row" alignItems="center" justifyContent="center" spacing={3}>
-        <Image src={hello} alt="hello" />
+        <Image src={helloImg} alt="hello" />
         <Text fontSize="5xl" fontWeight="150">{ username }</Text>
       </Stack>
-      <Input borderRadius="25px" size="lg" placeholder="password" type="password" />
+      <Input borderRadius="25px" size="lg" placeholder="Password" type="password" />
       <Button borderRadius="25px" size="lg" variantColor="purple">Login</Button>
     </Stack>
   )

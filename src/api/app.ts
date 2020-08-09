@@ -1,8 +1,9 @@
-import express from 'express';
+import express, { Response } from 'express';
 import expressip from 'express-ip';
 import path from 'path';
 import { User } from './entities/user';
 import { connectToDatabase } from './db';
+import { GetUsernameResponse } from './contract';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -25,17 +26,18 @@ connectToDatabase().then((orm) => {
   // routes
   const routes = express.Router();
 
-  routes.get('/is-setup-done', async (req, res) => {
+  routes.get('/username', async (req, res: Response<GetUsernameResponse>) => {
     try {
-      const usersCount = await orm.em.count(User);
+      const user = (await orm.em.find(User, {}))[0];
 
-      if (usersCount == 0) {
+      if (user) {
         res.json({
-          done: false
+          setupDone: true,
+          username: user.fullName
         });
       } else {
         res.json({
-          done: true
+          setupDone: false
         });
       }
     } catch (err) {
@@ -45,12 +47,6 @@ connectToDatabase().then((orm) => {
         error: true
       });
     }
-  });
-
-  routes.get('/username', (req, res) => {
-    res.json({
-      username: 'Ameer'
-    });
   });
 
   app.use('/api', routes);

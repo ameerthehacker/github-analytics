@@ -1,11 +1,12 @@
 import React from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import Login from '../login/login';
-import Home from '../home/home';
+import Dashboard from '../dashboard/dashboard';
 import { ThemeProvider, CSSReset, ColorModeProvider } from '@chakra-ui/core';
 import Navbar from '../../components/navbar/navbar';
 import { SWRConfig } from 'swr';
 import Helmet from 'react-helmet';
+import Setup from '../setup/setup';
 
 export default function App() {
   return (
@@ -22,8 +23,10 @@ export default function App() {
             <CSSReset />
             <Navbar />
             <Switch>
+              <Redirect from="/" to="/dashboard" exact />
               <Route path="/login" component={Login} exact />
-              <Route path="/" component={Home} exact />
+              <Route path="/dashboard" component={Dashboard} exact />
+              <Route path="/setup" component={Setup} exact />
             </Switch>
           </ColorModeProvider>
         </ThemeProvider>
