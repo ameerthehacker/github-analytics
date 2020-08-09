@@ -5,10 +5,18 @@
   "logo": "https://github.com/ameerthehacker/github-analytics/blob/master/images/logo64.png?raw=true",
   "keywords": ["github", "analytics"],
   "env": {
-    "JWT_TOKEN": {
+    "JWT_SECRET": {
       "description": "A secret key for jwt generation",
       "generator": "secret"
     }
   },
-  "success_url": "/setup"
+  "success_url": "/setup",
+  "addons": [
+    {
+      "plan": "heroku-postgresql",
+      "options": {
+        "version": "12"
+      }
+    }
+  ]
 }
