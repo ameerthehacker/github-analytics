@@ -19,6 +19,9 @@ export function connectToDatabase(): Promise<
       env.DATABASE_URL.length > 0
         ? {
             clientUrl: env.DATABASE_URL,
+            migrations: {
+              disableForeignKeys: false,
+            },
           }
         : {
             dbName: env.DB_NAME,

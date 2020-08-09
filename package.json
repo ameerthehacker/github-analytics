@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "concurrently -k npm:dev-client npm:dev-server",
     "dev-client": "react-scripts start",
-    "build": "react-scripts build",
-    "start-server": "ts-node --project src/api/tsconfig.json --files src/api/app.ts",
+    "build": "tsc --build src/api/tsconfig.json && npm run migration:up && react-scripts build",
+    "start-server": "node src/api/app.js",
     "dev-server": "cross-env NODE_ENV=development nodemon --ext ts,js --exec ts-node --project src/api/tsconfig.json --files src/api/app.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prettify": "prettier --write",
