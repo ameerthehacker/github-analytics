@@ -4,7 +4,7 @@ Get insights into how many visit your profile, repositories and from which count
 
 ## You control your data
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+<a href="https://heroku.com/deploy"><img src="https://www.herokucdn.com/deploy/button.svg" width="250px" /></a>
 
 ## Icons used:
 
