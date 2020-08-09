@@ -1,1 +1,1 @@
-declare module 'express-ip'
+declare module 'express-ip';

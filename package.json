@@ -9,6 +9,7 @@
     "start-server": "ts-node --project src/api/tsconfig.json --files src/api/app.ts",
     "dev-server": "cross-env NODE_ENV=development nodemon --ext ts,js --exec ts-node --project src/api/tsconfig.json --files src/api/app.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "prettify": "prettier --write",
     "migration:create": "ts-node --project src/api/tsconfig.json ./scripts/migrate.ts create",
     "migration:up": "ts-node --project src/api/tsconfig.json ./scripts/migrate.ts up",
     "migration:down": "ts-node --project src/api/tsconfig.json ./scripts/migrate.ts down",
@@ -75,5 +76,20 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.11",
+    "prettier": "^2.0.5"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx,html,json,scss,css,md,yml}": [
+      "npm run prettify"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   }
 }

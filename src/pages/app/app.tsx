@@ -10,10 +10,10 @@ import Setup from '../setup/setup';
 
 export default function App() {
   return (
-    <SWRConfig 
+    <SWRConfig
       value={{
         refreshInterval: 3000,
-        fetcher: (...args) => fetch(args).then(res => res.json())
+        fetcher: (...args) => fetch(args).then((res) => res.json()),
       }}
     >
       <Helmet titleTemplate="GitHub Analytics | %s" />

@@ -11,10 +11,22 @@ export default function Login() {
   const getFirstName = (fullName: string) => fullName.split(' ')[0];
 
   return (
-    <Flex height="100vh" width="100%" alignItems="center" justifyContent="center">
+    <Flex
+      height="100vh"
+      width="100%"
+      alignItems="center"
+      justifyContent="center"
+    >
       <Helmet title="Login" />
       {data && !data.setupDone && <Redirect to="/setup" />}
-      {data && data.username? <LoginForm onSubmit={r => console.log(r)} username={getFirstName(data.username)} />: <Spinner />}
+      {data && data.username ? (
+        <LoginForm
+          onSubmit={(r) => console.log(r)}
+          username={getFirstName(data.username)}
+        />
+      ) : (
+        <Spinner />
+      )}
     </Flex>
   );
 }
