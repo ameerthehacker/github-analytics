@@ -11,10 +11,20 @@ import {
 import { createHash } from 'crypto';
 import morgan from 'morgan';
 import favicon from 'serve-favicon';
+import passport from 'passport';
+import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
+import { load } from 'ts-dotenv';
+import jsonwebtoken from 'jsonwebtoken';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 const isDev = process.env.NODE_ENV === 'development';
+const { JWT_SECRET } = load({
+  JWT_SECRET: {
+    type: String,
+    default: 'secret',
+  },
+});
 
 interface IpInfo {
   ip: string;
@@ -22,6 +32,15 @@ interface IpInfo {
   city: string;
   country: string;
 }
+
+const generateJwtForUser = (user: User) => {
+  return jsonwebtoken.sign(
+    {
+      sub: user.id,
+    },
+    JWT_SECRET
+  );
+};
 
 // setup DB
 connectToDatabase()
@@ -36,6 +55,29 @@ connectToDatabase()
     app.use(morgan(isDev ? 'dev' : 'short'));
     // favicon
     app.use(favicon(path.join(__dirname, 'favicon.ico')));
+    // setup passport authentication
+    passport.use(
+      new JwtStrategy(
+        {
+          jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+          secretOrKey: JWT_SECRET,
+        },
+        (payload, done) => {
+          orm.em
+            .findOne(User, { id: payload.sub })
+            .then((user) => {
+              if (user) {
+                return done(null, user);
+              } else {
+                return done(null, false);
+              }
+            })
+            .catch((err) => {
+              done(err, false);
+            });
+        }
+      )
+    );
 
     // routes
     const routes = express.Router();
@@ -63,7 +105,7 @@ connectToDatabase()
 
           await orm.em.persistAndFlush(user);
 
-          res.json({ token: 'jwt token' });
+          res.json({ token: generateJwtForUser(user) });
         } catch (err) {
           console.error(err);
 
