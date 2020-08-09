@@ -5,3 +5,13 @@ export interface GetUsernameResponse {
   username?: string;
   setupDone?: boolean;
 }
+
+export interface SetupUserRequest {
+  fullName: string;
+  password: string;
+}
+
+export interface SetupUserResponse {
+  error?: boolean;
+  token?: string;
+}

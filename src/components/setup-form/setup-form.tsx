@@ -9,6 +9,7 @@ interface SetupFormResult {
 }
 
 interface SetupFormProps {
+  isProcessing?: boolean;
   onSubmit?: (result: SetupFormResult) => void;
 }
 
@@ -16,8 +17,14 @@ interface SetupFormFields extends SetupFormResult {
   retypePassword: string;
 }
 
-export default function SetupForm({ onSubmit }: SetupFormProps) {
-  const { register, handleSubmit, errors, watch } = useForm<SetupFormFields>();
+export default function SetupForm({ isProcessing, onSubmit }: SetupFormProps) {
+  const { register, handleSubmit, errors, watch } = useForm<SetupFormFields>({
+    defaultValues: process.env.NODE_ENV === 'development'? {
+      fullName: 'Ameer Jhan',
+      password: 'supersecret',
+      retypePassword: 'supersecret'
+    }: {}
+  });
 
   return (
     <Stack textAlign="center" spacing={5} width={[
@@ -51,7 +58,7 @@ export default function SetupForm({ onSubmit }: SetupFormProps) {
             }})}  borderRadius="25px" size="lg" placeholder="Retype password" type="password" />
             <FormErrorMessage>{errors.retypePassword?.message}</FormErrorMessage>
           </FormControl>
-          <Button type="submit" borderRadius="25px" size="lg" variantColor="purple">Setup</Button>
+          <Button type="submit" isLoading={isProcessing} loadingText="Wingardium Leviosa" borderRadius="25px" size="lg" variantColor="purple">Setup</Button>
         </Stack>
       </form>
     </Stack>
