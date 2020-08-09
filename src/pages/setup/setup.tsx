@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import { Flex, useToast } from '@chakra-ui/core';
 import Helmet from 'react-helmet';
 import SetupForm from '../../components/setup-form/setup-form';
-import { SetupUserResponse } from '../../api/contract';
+import { SetupUserResponse, SetupUserRequest } from '../../api/contract';
 import { useHistory } from 'react-router-dom';
+import { useHttp } from '../../hooks/use-http/use-http';
 
 export default function Setup() {
   const [isProcessing, setProcessing] = useState(false);
   const toast = useToast();
   const history = useHistory();
+  const http = useHttp();
   const showErrorToast = () => {
     toast({
       title: 'OOPS!',
@@ -32,15 +34,12 @@ export default function Setup() {
         onSubmit={(result) => {
           setProcessing(true);
 
-          fetch('/api/setup', {
-            method: 'POST',
-            body: JSON.stringify(result),
-            headers: {
-              'content-type': 'application/json',
-            },
-          })
-            .then((response: Response) => response.json())
-            .then((response: SetupUserResponse) => {
+          http
+            .post<SetupUserRequest, SetupUserResponse>({
+              url: '/setup',
+              body: result,
+            })
+            .then((response) => {
               if (response.error) {
                 showErrorToast();
               } else {

@@ -1,14 +1,21 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Flex, Spinner } from '@chakra-ui/core';
-import useSwr from 'swr';
 import LoginForm from '../../components/login-form/login-form';
 import Helmet from 'react-helmet';
 import { Redirect } from 'react-router-dom';
 import { GetUsernameResponse } from '../../api/contract';
+import { useHttp } from '../../hooks/use-http/use-http';
 
 export default function Login() {
-  const { data } = useSwr<GetUsernameResponse>('/api/username');
+  const [data, setData] = useState<GetUsernameResponse>();
+  const http = useHttp();
   const getFirstName = (fullName: string) => fullName.split(' ')[0];
+
+  useEffect(() => {
+    http
+      .get<GetUsernameResponse>({ url: '/username' })
+      .then(setData);
+  }, []);
 
   return (
     <Flex
