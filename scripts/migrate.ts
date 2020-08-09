@@ -13,7 +13,12 @@ connectToDatabase().then(orm => {
 
   switch (command) {
     case 'create': {
-      migrator.createMigration();
+      migrator.createMigration().then(() => {
+        console.log('Migrations created successfully');
+
+        orm.close();
+      })
+      .catch(() => orm.close());
       break;
     }
     case 'up': {
