@@ -46,7 +46,11 @@ export default function Navbar() {
               aria-label="logout"
             />
           ) : (
-            <IconButton icon={FaSignInAlt} aria-label="login" />
+            <IconButton
+              onClick={() => history.push('/login')}
+              icon={FaSignInAlt}
+              aria-label="login"
+            />
           )}
         </Stack>
       </Flex>

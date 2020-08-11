@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
-import { Flex, useToast } from '@chakra-ui/core';
+import React, { useState, useEffect } from 'react';
+import { Flex, useToast, Spinner } from '@chakra-ui/core';
 import Helmet from 'react-helmet';
 import SetupForm from '../../components/setup-form/setup-form';
-import { SetupUserResponse, SetupUserRequest } from '../../api/contract';
-import { useHistory } from 'react-router-dom';
+import {
+  SetupUserResponse,
+  SetupUserRequest,
+  GetUsernameResponse,
+} from '../../api/contract';
+import { useHistory, Redirect } from 'react-router-dom';
 import { useHttp } from '../../hooks/use-http/use-http';
 
 export default function Setup() {
@@ -11,6 +15,7 @@ export default function Setup() {
   const toast = useToast();
   const history = useHistory();
   const http = useHttp();
+  const [data, setData] = useState<GetUsernameResponse>();
   const showErrorToast = () => {
     toast({
       title: 'OOPS!',
@@ -21,6 +26,12 @@ export default function Setup() {
     });
   };
 
+  useEffect(() => {
+    http
+      .get<GetUsernameResponse>({ url: '/username' })
+      .then(setData);
+  }, [http]);
+
   return (
     <Flex
       height="100vh"
@@ -29,31 +40,36 @@ export default function Setup() {
       justifyContent="center"
     >
       <Helmet title="Setup" />
-      <SetupForm
-        isProcessing={isProcessing}
-        onSubmit={(result) => {
-          setProcessing(true);
+      {data && data.setupDone && <Redirect to="/login" />}
+      {data && !data.setupDone ? (
+        <SetupForm
+          isProcessing={isProcessing}
+          onSubmit={(result) => {
+            setProcessing(true);
 
-          http
-            .post<SetupUserRequest, SetupUserResponse>({
-              url: '/setup',
-              body: result,
-            })
-            .then((response) => {
-              if (response.error) {
+            http
+              .post<SetupUserRequest, SetupUserResponse>({
+                url: '/setup',
+                body: result,
+              })
+              .then((response) => {
+                if (response.error) {
+                  showErrorToast();
+                } else {
+                  history.push('/dashboard');
+                }
+
+                setProcessing(false);
+              })
+              .catch(() => {
                 showErrorToast();
-              } else {
-                history.push('/dashboard');
-              }
-
-              setProcessing(false);
-            })
-            .catch(() => {
-              showErrorToast();
-              setProcessing(false);
-            });
-        }}
-      />
+                setProcessing(false);
+              });
+          }}
+        />
+      ) : (
+        <Spinner />
+      )}
     </Flex>
   );
 }
