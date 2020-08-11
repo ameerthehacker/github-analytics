@@ -37,4 +37,8 @@ export class Auth {
 
     return jwt && jwt.length > 0;
   }
+
+  logout() {
+    localStorage.removeItem(JWT_TOKEN);
+  }
 }

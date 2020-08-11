@@ -3,10 +3,12 @@ import { Box, Flex, Stack, useColorMode, IconButton } from '@chakra-ui/core';
 import { FaSignOutAlt, FaGithub, FaSignInAlt } from 'react-icons/fa';
 import Brand from './components/brand/brand';
 import { useAuth } from '../../hooks/use-auth/use-auth';
+import { useHistory } from 'react-router-dom';
 
 export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();
   const auth = useAuth();
+  const history = useHistory();
 
   return (
     <Box
@@ -34,7 +36,15 @@ export default function Navbar() {
             aria-label={`Switch to ${colorMode} mode`}
           />
           {auth.isLoggedIn() ? (
-            <IconButton icon={FaSignOutAlt} aria-label="logout" />
+            <IconButton
+              onClick={() => {
+                auth.logout();
+
+                history.push('/login');
+              }}
+              icon={FaSignOutAlt}
+              aria-label="logout"
+            />
           ) : (
             <IconButton icon={FaSignInAlt} aria-label="login" />
           )}
