@@ -1,8 +1,8 @@
 import history from '../../history';
+import { JWT_TOKEN } from '../../constants';
 
 export class Http {
   private basePath: string;
-  private jwt: string;
 
   constructor(basePath: string = '/') {
     if (!basePath.endsWith('/')) {
@@ -21,8 +21,10 @@ export class Http {
   }
 
   private addBearerToken(headers: Headers) {
-    if (this.jwt.length > 0) {
-      headers.append('Authorization', `Bearer ${this.jwt}`);
+    const jwt = localStorage.getItem(JWT_TOKEN);
+
+    if (jwt && jwt.length > 0) {
+      headers.append('Authorization', `Bearer ${jwt}`);
     }
 
     return headers;
@@ -30,10 +32,6 @@ export class Http {
 
   private redirectToLogin() {
     history.push('/login');
-  }
-
-  setJwt(token: string) {
-    this.jwt = token;
   }
 
   get<TResponse>({

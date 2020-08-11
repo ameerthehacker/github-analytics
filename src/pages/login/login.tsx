@@ -15,7 +15,7 @@ export default function Login() {
     http
       .get<GetUsernameResponse>({ url: '/username' })
       .then(setData);
-  }, []);
+  }, [http]);
 
   return (
     <Flex

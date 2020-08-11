@@ -9,6 +9,7 @@ import Setup from '../setup/setup';
 import history from '../../history';
 import { Router } from 'react-router-dom';
 import HttpProvider from '../../contexts/http/http';
+import AuthProvider from '../../contexts/auth/auth';
 
 export default function App() {
   return (
@@ -19,13 +20,15 @@ export default function App() {
           <ColorModeProvider>
             <CSSReset />
             <HttpProvider>
-              <Navbar />
-              <Switch>
-                <Redirect from="/" to="/dashboard" exact />
-                <Route path="/login" component={Login} exact />
-                <Route path="/dashboard" component={Dashboard} exact />
-                <Route path="/setup" component={Setup} exact />
-              </Switch>
+              <AuthProvider>
+                <Navbar />
+                <Switch>
+                  <Redirect from="/" to="/dashboard" exact />
+                  <Route path="/login" component={Login} exact />
+                  <Route path="/dashboard" component={Dashboard} exact />
+                  <Route path="/setup" component={Setup} exact />
+                </Switch>
+              </AuthProvider>
             </HttpProvider>
           </ColorModeProvider>
         </ThemeProvider>

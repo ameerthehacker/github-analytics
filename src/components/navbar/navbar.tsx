@@ -1,10 +1,12 @@
 import React from 'react';
 import { Box, Flex, Stack, useColorMode, IconButton } from '@chakra-ui/core';
-import { FaSignOutAlt, FaGithub } from 'react-icons/fa';
+import { FaSignOutAlt, FaGithub, FaSignInAlt } from 'react-icons/fa';
 import Brand from './components/brand/brand';
+import { useAuth } from '../../hooks/use-auth/use-auth';
 
 export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();
+  const auth = useAuth();
 
   return (
     <Box
@@ -31,7 +33,11 @@ export default function Navbar() {
             icon={colorMode === 'light' ? 'moon' : 'sun'}
             aria-label={`Switch to ${colorMode} mode`}
           />
-          <IconButton icon={FaSignOutAlt} aria-label="logout" />
+          {auth.isLoggedIn() ? (
+            <IconButton icon={FaSignOutAlt} aria-label="logout" />
+          ) : (
+            <IconButton icon={FaSignInAlt} aria-label="login" />
+          )}
         </Stack>
       </Flex>
     </Box>
