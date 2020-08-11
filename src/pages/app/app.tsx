@@ -10,6 +10,7 @@ import history from '../../history';
 import { Router } from 'react-router-dom';
 import HttpProvider from '../../contexts/http/http';
 import AuthProvider from '../../contexts/auth/auth';
+import PrivateRoute from '../../components/private-route/private-route';
 
 export default function App() {
   return (
@@ -25,7 +26,7 @@ export default function App() {
                 <Switch>
                   <Redirect from="/" to="/dashboard" exact />
                   <Route path="/login" component={Login} exact />
-                  <Route path="/dashboard" component={Dashboard} exact />
+                  <PrivateRoute path="/dashboard" component={Dashboard} exact />
                   <Route path="/setup" component={Setup} exact />
                 </Switch>
               </AuthProvider>
