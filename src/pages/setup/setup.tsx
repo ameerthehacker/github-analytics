@@ -9,6 +9,7 @@ import {
 } from '../../api/contract';
 import { useHistory, Redirect } from 'react-router-dom';
 import { useHttp } from '../../hooks/use-http/use-http';
+import { useAuth } from '../../hooks/use-auth/use-auth';
 
 export default function Setup() {
   const [isProcessing, setProcessing] = useState(false);
@@ -16,6 +17,7 @@ export default function Setup() {
   const history = useHistory();
   const http = useHttp();
   const [data, setData] = useState<GetUsernameResponse>();
+  const { loginWithToken } = useAuth();
   const showErrorToast = () => {
     toast({
       title: 'OOPS!',
@@ -54,12 +56,14 @@ export default function Setup() {
               })
               .then((response) => {
                 if (response.error) {
+                  setProcessing(false);
+
                   showErrorToast();
-                } else {
+                } else if (response.token) {
+                  loginWithToken(response.token);
+
                   history.push('/dashboard');
                 }
-
-                setProcessing(false);
               })
               .catch(() => {
                 showErrorToast();

@@ -11,8 +11,8 @@ export default function PrivateRoute({
   component,
   ...rest
 }: PrivateRouteProps) {
-  const auth = useAuth();
-  const componentToRender = auth.isLoggedIn()
+  const { isLoggedIn } = useAuth();
+  const componentToRender = isLoggedIn
     ? component
     : () => <Redirect to={fallbackPath} />;
 

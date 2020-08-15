@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom';
 
 export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();
-  const auth = useAuth();
+  const { isLoggedIn, logout } = useAuth();
   const history = useHistory();
 
   return (
@@ -35,10 +35,10 @@ export default function Navbar() {
             icon={colorMode === 'light' ? 'moon' : 'sun'}
             aria-label={`Switch to ${colorMode} mode`}
           />
-          {auth.isLoggedIn() ? (
+          {isLoggedIn ? (
             <IconButton
               onClick={() => {
-                auth.logout();
+                logout();
 
                 history.push('/login');
               }}

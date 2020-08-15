@@ -13,7 +13,7 @@ import helloImg from './hello.png';
 
 interface LoginFormProps {
   username: string;
-  onSubmit?: (result: LoginFormResult) => void;
+  onSubmit?: (result: LoginFormResult, reset: () => void) => void;
 }
 
 interface LoginFormResult {
@@ -21,7 +21,14 @@ interface LoginFormResult {
 }
 
 export default function LoginForm({ username, onSubmit }: LoginFormProps) {
-  const { register, errors, handleSubmit } = useForm<LoginFormResult>();
+  const { register, errors, handleSubmit, reset } = useForm<LoginFormResult>({
+    defaultValues:
+      process.env.NODE_ENV === 'development'
+        ? {
+            password: 'supersecret',
+          }
+        : {},
+  });
 
   return (
     <Stack
@@ -41,7 +48,9 @@ export default function LoginForm({ username, onSubmit }: LoginFormProps) {
           {username}
         </Text>
       </Stack>
-      <form onSubmit={onSubmit && handleSubmit(onSubmit)}>
+      <form
+        onSubmit={onSubmit && handleSubmit((result) => onSubmit(result, reset))}
+      >
         <Stack spacing={5}>
           <FormControl isInvalid={!!errors.password}>
             <Input

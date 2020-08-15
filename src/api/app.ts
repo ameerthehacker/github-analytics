@@ -7,6 +7,8 @@ import {
   GetUsernameResponse,
   SetupUserRequest,
   SetupUserResponse,
+  LoginWithPasswordRequest,
+  LoginWithPasswordResponse,
 } from './contract';
 import { createHash } from 'crypto';
 import morgan from 'morgan';
@@ -114,6 +116,36 @@ connectToDatabase()
       }
     );
 
+    routes.post(
+      '/auth/password',
+      async (
+        req: Request<{}, {}, LoginWithPasswordRequest>,
+        res: Response<LoginWithPasswordResponse>
+      ) => {
+        const { password } = req.body;
+
+        try {
+          const user = (await orm.em.find(User, {}))[0];
+          const passwordHash = createHash('sha512')
+            .update(password, 'utf8')
+            .digest('hex');
+
+          if (user.password === passwordHash) {
+            res.json({
+              isAuthenticated: true,
+              token: generateJwtForUser(user),
+            });
+          } else {
+            res.json({ isAuthenticated: false });
+          }
+        } catch (err) {
+          console.error(err);
+
+          res.json({ error: true, isAuthenticated: false });
+        }
+      }
+    );
+
     routes.get('/username', async (req, res: Response<GetUsernameResponse>) => {
       try {
         const user = (await orm.em.find(User, {}))[0];
@@ -137,9 +169,7 @@ connectToDatabase()
       }
     });
 
-    app.use('/api', routes);
-
-    app.get('/api/track', (req: any, res) => {
+    routes.get('/track', (req: any, res) => {
       const ipInfo: IpInfo = req.ipInfo;
 
       if (!ipInfo.error) {
@@ -148,6 +178,8 @@ connectToDatabase()
 
       res.sendStatus(200);
     });
+
+    app.use('/api', routes);
 
     app.get('*', (req, res) => {
       res.sendFile(path.join(process.cwd(), 'build', 'index.html'));

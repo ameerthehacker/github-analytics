@@ -1,21 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import { Flex, Spinner } from '@chakra-ui/core';
+import { Flex, Spinner, useToast } from '@chakra-ui/core';
 import LoginForm from '../../components/login-form/login-form';
 import Helmet from 'react-helmet';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import { GetUsernameResponse } from '../../api/contract';
 import { useHttp } from '../../hooks/use-http/use-http';
+import { useAuth } from '../../hooks/use-auth/use-auth';
 
 export default function Login() {
   const [data, setData] = useState<GetUsernameResponse>();
   const http = useHttp();
+  const history = useHistory();
   const getFirstName = (fullName: string) => fullName.split(' ')[0];
+  const { isLoggedIn, loginWithPassword } = useAuth();
+  const toast = useToast();
+  const showErrorToast = () => {
+    toast({
+      title: 'OOPS!',
+      description: 'Sorry, something went wrong. Try again.',
+      isClosable: true,
+      duration: 4000,
+      status: 'error',
+    });
+  };
 
   useEffect(() => {
-    http
-      .get<GetUsernameResponse>({ url: '/username' })
-      .then(setData);
-  }, [http]);
+    if (!isLoggedIn) {
+      http
+        .get<GetUsernameResponse>({ url: '/username' })
+        .then(setData);
+    } else {
+      history.push('/dashboard');
+    }
+  }, [http, history, isLoggedIn]);
 
   return (
     <Flex
@@ -28,7 +45,29 @@ export default function Login() {
       {data && !data.setupDone && <Redirect to="/setup" />}
       {data && data.username ? (
         <LoginForm
-          onSubmit={(r) => console.log(r)}
+          onSubmit={(result, resetForm) => {
+            loginWithPassword(result.password)
+              .then((response) => {
+                if (response.isAuthenticated) {
+                  history.push('/dashboard');
+                } else if (!response.isAuthenticated && !response.error) {
+                  toast({
+                    title: 'Sorry!',
+                    description: 'Invalid password',
+                    status: 'error',
+                    variant: 'left-accent',
+                    isClosable: true,
+                  });
+
+                  resetForm();
+                } else if (response.error) {
+                  showErrorToast();
+                }
+              })
+              .catch(() => {
+                showErrorToast();
+              });
+          }}
           username={getFirstName(data.username)}
         />
       ) : (

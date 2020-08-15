@@ -1,14 +1,18 @@
 import { useContext } from 'react';
-import { authContent } from '../../contexts/auth/auth';
+import {
+  authInfoContext,
+  authFunctionsContext,
+} from '../../contexts/auth/auth';
 
 export function useAuth() {
-  const auth = useContext(authContent);
+  const authInfo = useContext(authInfoContext);
+  const authFunctions = useContext(authFunctionsContext);
 
-  if (auth === null) {
+  if (authInfo === null || authFunctions === null) {
     throw new Error(
       'You need to wrap your component with `AuthProvider` for `useAuth` hook to work'
     );
   }
 
-  return auth;
+  return { ...authInfo, ...authFunctions };
 }

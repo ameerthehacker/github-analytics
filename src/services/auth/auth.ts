@@ -35,7 +35,7 @@ export class Auth {
   isLoggedIn() {
     const jwt = localStorage.getItem(JWT_TOKEN);
 
-    return jwt && jwt.length > 0;
+    return Boolean(jwt && jwt.length > 0);
   }
 
   logout() {
