@@ -84,6 +84,9 @@ connectToDatabase()
 
     // routes
     const routes = express.Router();
+    const authenticationMiddleware = passport.authenticate('jwt', {
+      session: false,
+    });
 
     routes.post(
       '/setup',
@@ -178,6 +181,10 @@ connectToDatabase()
       }
 
       res.sendStatus(200);
+    });
+
+    routes.get('/quick-metrics', authenticationMiddleware, (req, res) => {
+      res.json({ metrics: {} });
     });
 
     app.use('/api', routes);
