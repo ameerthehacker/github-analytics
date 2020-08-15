@@ -39,6 +39,7 @@ const generateJwtForUser = (user: User) => {
   return jsonwebtoken.sign(
     {
       sub: user.id,
+      fullName: user.fullName,
     },
     JWT_SECRET
   );

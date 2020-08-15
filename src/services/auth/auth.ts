@@ -1,10 +1,16 @@
 import { Http } from '../http/http';
-
 import {
   LoginWithPasswordRequest,
   LoginWithPasswordResponse,
 } from '../../api/contract';
 import { JWT_TOKEN } from '../../constants';
+import { decode } from 'jsonwebtoken';
+
+interface JwtInfo {
+  sub: string;
+  iat: number;
+  fullName: string;
+}
 
 export class Auth {
   constructor(private http: Http) {}
@@ -28,14 +34,20 @@ export class Auth {
     });
   }
 
+  private get JWT() {
+    return localStorage.getItem(JWT_TOKEN) || '';
+  }
+
+  decodeJwt() {
+    return decode(this.JWT) as JwtInfo;
+  }
+
   loginWithToken(token: string) {
     localStorage.setItem(JWT_TOKEN, token);
   }
 
   isLoggedIn() {
-    const jwt = localStorage.getItem(JWT_TOKEN);
-
-    return Boolean(jwt && jwt.length > 0);
+    return this.JWT.length > 0;
   }
 
   logout() {

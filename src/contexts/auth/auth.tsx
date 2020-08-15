@@ -6,6 +6,10 @@ import { LoginWithPasswordResponse } from '../../api/contract';
 
 interface AuthInfo {
   isLoggedIn: boolean;
+  user: {
+    id: string;
+    fullName: string;
+  } | null;
 }
 
 interface AuthFunctions {
@@ -21,9 +25,20 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const http = useHttp();
   const auth = new Auth(http);
   const [isLoggedIn, setIsLoggedIn] = useState(auth.isLoggedIn());
+  const jwtInfo = auth.decodeJwt();
 
   return (
-    <authInfoContext.Provider value={{ isLoggedIn }}>
+    <authInfoContext.Provider
+      value={{
+        isLoggedIn,
+        user: isLoggedIn
+          ? {
+              id: jwtInfo.sub,
+              fullName: jwtInfo.fullName,
+            }
+          : null,
+      }}
+    >
       <authFunctionsContext.Provider
         value={{
           loginWithPassword(password: string) {
