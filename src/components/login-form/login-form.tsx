@@ -13,6 +13,7 @@ import helloImg from './hello.png';
 
 interface LoginFormProps {
   username: string;
+  isProcessing?: boolean;
   onSubmit?: (result: LoginFormResult, reset: () => void) => void;
 }
 
@@ -20,7 +21,11 @@ interface LoginFormResult {
   password: string;
 }
 
-export default function LoginForm({ username, onSubmit }: LoginFormProps) {
+export default function LoginForm({
+  username,
+  onSubmit,
+  isProcessing,
+}: LoginFormProps) {
   const { register, errors, handleSubmit, reset } = useForm<LoginFormResult>({
     defaultValues:
       process.env.NODE_ENV === 'development'
@@ -68,6 +73,8 @@ export default function LoginForm({ username, onSubmit }: LoginFormProps) {
             borderRadius="25px"
             size="lg"
             variantColor="purple"
+            isLoading={isProcessing}
+            loadingText="Checking..."
           >
             Login
           </Button>

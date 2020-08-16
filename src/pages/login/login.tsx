@@ -14,6 +14,7 @@ export default function Login() {
   const getFirstName = (fullName: string) => fullName.split(' ')[0];
   const { isLoggedIn, loginWithPassword } = useAuth();
   const toast = useToast();
+  const [isProcessing, setIsProcessing] = useState(false);
   const showErrorToast = () => {
     toast({
       title: 'OOPS!',
@@ -45,7 +46,10 @@ export default function Login() {
       {data && !data.setupDone && <Redirect to="/setup" />}
       {data && data.username ? (
         <LoginForm
+          isProcessing={isProcessing}
           onSubmit={(result, resetForm) => {
+            setIsProcessing(true);
+
             loginWithPassword(result.password)
               .then((response) => {
                 if (response.isAuthenticated) {
@@ -60,8 +64,10 @@ export default function Login() {
                   });
 
                   resetForm();
+                  setIsProcessing(false);
                 } else if (response.error) {
                   showErrorToast();
+                  setIsProcessing(false);
                 }
               })
               .catch(() => {
