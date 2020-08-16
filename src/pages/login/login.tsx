@@ -6,6 +6,7 @@ import { Redirect, useHistory } from 'react-router-dom';
 import { GetUsernameResponse } from '../../api/contract';
 import { useHttp } from '../../hooks/use-http/use-http';
 import { useAuth } from '../../hooks/use-auth/use-auth';
+import Error500 from '../../components/error500/error500';
 
 export default function Login() {
   const [data, setData] = useState<GetUsernameResponse>();
@@ -29,7 +30,12 @@ export default function Login() {
     if (!isLoggedIn) {
       http
         .get<GetUsernameResponse>({ url: '/username' })
-        .then(setData);
+        .then(setData)
+        .catch(() => {
+          setData({
+            error: true,
+          });
+        });
     } else {
       history.push('/dashboard');
     }
@@ -43,7 +49,8 @@ export default function Login() {
       justifyContent="center"
     >
       <Helmet title="Login" />
-      {data && !data.setupDone && <Redirect to="/setup" />}
+      {data?.error && <Error500 />}
+      {data && !data.error && !data.setupDone && <Redirect to="/setup" />}
       {data && data.username ? (
         <LoginForm
           isProcessing={isProcessing}
@@ -77,7 +84,7 @@ export default function Login() {
           username={getFirstName(data.username)}
         />
       ) : (
-        <Spinner />
+        !data?.error && <Spinner />
       )}
     </Flex>
   );

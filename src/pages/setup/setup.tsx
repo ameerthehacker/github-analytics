@@ -10,6 +10,7 @@ import {
 import { useHistory, Redirect } from 'react-router-dom';
 import { useHttp } from '../../hooks/use-http/use-http';
 import { useAuth } from '../../hooks/use-auth/use-auth';
+import Error500 from '../../components/error500/error500';
 
 export default function Setup() {
   const [isProcessing, setProcessing] = useState(false);
@@ -31,7 +32,12 @@ export default function Setup() {
   useEffect(() => {
     http
       .get<GetUsernameResponse>({ url: '/username' })
-      .then(setData);
+      .then(setData)
+      .catch(() => {
+        setData({
+          error: true,
+        });
+      });
   }, [http]);
 
   return (
@@ -42,8 +48,9 @@ export default function Setup() {
       justifyContent="center"
     >
       <Helmet title="Setup" />
-      {data && data.setupDone && <Redirect to="/login" />}
-      {data && !data.setupDone ? (
+      {data?.error && <Error500 />}
+      {data && !data.error && data.setupDone && <Redirect to="/login" />}
+      {data && !data.error && !data.setupDone ? (
         <SetupForm
           isProcessing={isProcessing}
           onSubmit={(result) => {
@@ -72,7 +79,7 @@ export default function Setup() {
           }}
         />
       ) : (
-        <Spinner />
+        !data?.error && <Spinner />
       )}
     </Flex>
   );
